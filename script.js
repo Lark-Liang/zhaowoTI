@@ -533,7 +533,7 @@ const QUESTIONS = [
             "逐条爬楼，不错过任何梗",
             "直接无视，只看@我的",
             "AI总结，看看有没有好笑的内容",
-            "有空的时候会翻，但一般翻不完"
+            "不可能，没有未读消息"
         ],
         scores: [2, -2, 1, -1]
     },
@@ -555,7 +555,7 @@ const CHARACTERS = [
     {
         name: '熏猪肉',
         icon: '🍖',
-        description: '你是一个超级强度党，热爱游戏，伟大的主司大人！雅社感谢有你。',
+        description: '你是一个石山搭建者，挂人永动机，伟大的主司大人！雅社感谢有你。',
         scores: { xp: 2, impart: -5, meme: -3, pvp: 0, whale: -5, clan: 7, loyalty: -3, phase: 4 }
     },
     {
@@ -623,6 +623,12 @@ const CHARACTERS = [
         icon: '💃',
         description: '你是雅社的装糖使者，糖丸了！请问你是真糖还是假糖？',
         scores: { xp: 6, impart: 11, meme: 4, pvp: 1, whale: 8, clan: 6, loyalty: 0, phase: 0 }
+    },
+    {
+        name: '燃烧红利群',
+        icon: '🚬',
+        description: '你是雅社的重要成员，更是个100%的强度党！我的天呐下次逐鹿继续上吧！',
+        scores: { xp: -12, impart: 4, meme: -1, pvp: -2, whale: 4, clan: 9, loyalty: -9, phase: 6 }
     }
 ];
 
@@ -750,12 +756,17 @@ function findBestMatch(userScores) {
         answer => answer && answer.questionId === 'T4_5' && answer.optionIndex === 1
     );
     
+    const hasSpecialAnswer_T8_5 = userAnswers.some(
+        answer => answer && answer.questionId === 'T8_5' && answer.optionIndex === 3
+    );
+    
     // 调试日志
     console.log('特殊答案检测:', {
         T3_4: hasSpecialAnswer_T3_4,
         T6_3: hasSpecialAnswer_T6_3,
         T6_6: hasSpecialAnswer_T6_6,
-        T4_5: hasSpecialAnswer_T4_5
+        T4_5: hasSpecialAnswer_T4_5,
+        T8_5: hasSpecialAnswer_T8_5
     });
     
     CHARACTERS.forEach(character => {
@@ -782,6 +793,14 @@ function findBestMatch(userScores) {
             bonuses.push('T4_5(+7)');
         }
         
+        if (hasSpecialAnswer_T8_5 && character.name === '糊纸') {
+            similarity += 5;
+            bonuses.push('T8_5(+5)');
+        }
+        
+        // 匹配度上限为100%
+        similarity = Math.min(similarity, 100);
+        
         // 调试日志
         console.log(`${character.name}: 基础相似度=${Math.round(calculateSimilarity(userScores, character.scores))}, 加成=[${bonuses.join(',')}], 最终相似度=${similarity}`);
         
@@ -791,7 +810,58 @@ function findBestMatch(userScores) {
         }
     });
     
-    return { character: bestCharacter, similarity: highestSimilarity };
+    return { character: bestCharacter, similarity: highestSimilarity, allSimilarities: allSimilarities };
+}
+
+// 获取所有角色的相似度（用于显示"你还像..."）
+function getAllSimilarities(userScores) {
+    const hasSpecialAnswer_T3_4 = userAnswers.some(
+        answer => answer && answer.questionId === 'T3_4' && answer.optionIndex === 3
+    );
+    const hasSpecialAnswer_T6_3 = userAnswers.some(
+        answer => answer && answer.questionId === 'T6_3' && answer.optionIndex === 2
+    );
+    const hasSpecialAnswer_T6_6 = userAnswers.some(
+        answer => answer && answer.questionId === 'T6_6' && answer.optionIndex === 3
+    );
+    const hasSpecialAnswer_T4_5 = userAnswers.some(
+        answer => answer && answer.questionId === 'T4_5' && answer.optionIndex === 1
+    );
+    const hasSpecialAnswer_T8_5 = userAnswers.some(
+        answer => answer && answer.questionId === 'T8_5' && answer.optionIndex === 3
+    );
+    
+    const results = [];
+    
+    CHARACTERS.forEach(character => {
+        let similarity = calculateSimilarity(userScores, character.scores);
+        
+        if (hasSpecialAnswer_T3_4 && (character.name === '冰鲜' || character.name === '熏猪肉')) {
+            similarity += 4;
+        }
+        if (hasSpecialAnswer_T6_3 && character.name === '熏猪肉') {
+            similarity += 5;
+        }
+        if (hasSpecialAnswer_T6_6 && character.name === '熏猪肉') {
+            similarity += 5;
+        }
+        if (hasSpecialAnswer_T4_5 && character.name === '嫂子') {
+            similarity += 7;
+        }
+        if (hasSpecialAnswer_T8_5 && character.name === '糊纸') {
+            similarity += 5;
+        }
+        
+        similarity = Math.min(similarity, 100);
+        
+        results.push({
+            name: character.name,
+            icon: character.icon,
+            similarity: similarity
+        });
+    });
+    
+    return results.sort((a, b) => b.similarity - a.similarity);
 }
 
 // 维度评价文字描述
@@ -845,6 +915,7 @@ function getDimensionEvaluation(dim, score) {
 // 显示结果
 function showResult() {
     const match = findBestMatch(userScores);
+    const allSimilarities = getAllSimilarities(userScores);
 
     // 更新角色匹配信息
     document.getElementById('character-icon').textContent = match.character.icon;
@@ -860,9 +931,8 @@ function showResult() {
         const fillEl = document.getElementById(`fill-${dim}`);
         const scoreEl = document.getElementById(`score-${dim}`);
 
-        // 计算条形宽度（相对于中心点）
         const absScore = Math.abs(score);
-        const percentage = (absScore / 12) * 50; // 最大50%（中心到边缘）
+        const percentage = (absScore / 12) * 50;
 
         fillEl.style.width = `${percentage}%`;
         fillEl.className = 'bar-fill ' + (score >= 0 ? 'warm' : 'cool');
@@ -872,6 +942,27 @@ function showResult() {
 
         document.getElementById(`eval-${dim}`).textContent = getDimensionEvaluation(dim, score);
     });
+
+    // 显示相似角色（排除最佳匹配且相似度>=70%）
+    const similarContainer = document.getElementById('similar-characters');
+    const similarList = document.getElementById('similar-list');
+    
+    const similarCharacters = allSimilarities.filter(
+        item => item.name !== match.character.name && item.similarity >= 70
+    );
+    
+    if (similarCharacters.length > 0) {
+        similarContainer.style.display = 'block';
+        similarList.innerHTML = similarCharacters.map(item => `
+            <div class="similar-item">
+                <span class="similar-icon">${item.icon}</span>
+                <span class="similar-name">${item.name}</span>
+                <span class="similar-percent">${item.similarity}%</span>
+            </div>
+        `).join('');
+    } else {
+        similarContainer.style.display = 'none';
+    }
 
     // 切换页面
     testPage.classList.remove('active');

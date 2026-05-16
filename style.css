@@ -744,6 +744,107 @@ body::before {
     }
 }
 
+/* 相似角色推荐区样式 */
+.similar-characters {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.similar-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 18px;
+    text-align: center;
+    position: relative;
+}
+
+.similar-title::before,
+.similar-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4));
+}
+
+.similar-title::before {
+    left: 0;
+}
+
+.similar-title::after {
+    right: 0;
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.4), transparent);
+}
+
+.similar-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.similar-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.similar-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.similar-icon {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.similar-name {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-right: 12px;
+}
+
+.similar-percent {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.15);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+@media (max-width: 480px) {
+    .similar-title {
+        font-size: 14px;
+    }
+    
+    .similar-item {
+        padding: 10px 14px;
+    }
+    
+    .similar-icon {
+        font-size: 18px;
+    }
+    
+    .similar-name {
+        font-size: 13px;
+    }
+    
+    .similar-percent {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+}
+
 @media (max-width: 380px) {
     .title {
         font-size: 22px;
