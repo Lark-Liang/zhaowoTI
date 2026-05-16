@@ -598,7 +598,7 @@ const CHARACTERS = [
         name: '嫂子',
         icon: '👩',
         description: '你是雅社的核心成员，虽然定期刷新但是并不影响你关心每一位使君。蒸蚌！',
-        scores: { xp: 0, impart: 0, meme: 8, pvp: 3, whale: 5, clan: 10, loyalty: -3, phase: -3 }
+        scores: { xp: 5, impart: 0, meme: 6, pvp: -3, whale: 5, clan: 9, loyalty: -1, phase: 1 }
     },
     {
         name: '腊肉鬼',
@@ -617,6 +617,12 @@ const CHARACTERS = [
         icon: '🏭',
         description: '你是神秘的金箔厂，虽然不经常出现，但是其实你为了自己的XP/强度很能氪金！',
         scores: { xp: 2, impart: -8, meme: -3, pvp: -5, whale: 10, clan: -3, loyalty: 2, phase: -5 }
+    },
+    {
+        name: '善舞零',
+        icon: '💃',
+        description: '你是雅社的装糖使者，糖丸了！请问你是真糖还是假糖？',
+        scores: { xp: 6, impart: 11, meme: 4, pvp: 1, whale: 8, clan: 6, loyalty: 0, phase: 0 }
     }
 ];
 
@@ -729,39 +735,55 @@ function findBestMatch(userScores) {
     
     // 检查是否有特殊答案需要处理
     const hasSpecialAnswer_T3_4 = userAnswers.some(
-        answer => answer.questionId === 'T3_4' && answer.optionIndex === 3
+        answer => answer && answer.questionId === 'T3_4' && answer.optionIndex === 3
     );
     
     const hasSpecialAnswer_T6_3 = userAnswers.some(
-        answer => answer.questionId === 'T6_3' && answer.optionIndex === 2
+        answer => answer && answer.questionId === 'T6_3' && answer.optionIndex === 2
     );
     
     const hasSpecialAnswer_T6_6 = userAnswers.some(
-        answer => answer.questionId === 'T6_6' && answer.optionIndex === 3
+        answer => answer && answer.questionId === 'T6_6' && answer.optionIndex === 3
     );
     
     const hasSpecialAnswer_T4_5 = userAnswers.some(
-        answer => answer.questionId === 'T4_5' && answer.optionIndex === 1
+        answer => answer && answer.questionId === 'T4_5' && answer.optionIndex === 1
     );
+    
+    // 调试日志
+    console.log('特殊答案检测:', {
+        T3_4: hasSpecialAnswer_T3_4,
+        T6_3: hasSpecialAnswer_T6_3,
+        T6_6: hasSpecialAnswer_T6_6,
+        T4_5: hasSpecialAnswer_T4_5
+    });
     
     CHARACTERS.forEach(character => {
         let similarity = calculateSimilarity(userScores, character.scores);
+        let bonuses = [];
         
         if (hasSpecialAnswer_T3_4 && (character.name === '冰鲜' || character.name === '熏猪肉')) {
-            similarity += 2;
+            similarity += 4;
+            bonuses.push('T3_4(+4)');
         }
         
         if (hasSpecialAnswer_T6_3 && character.name === '熏猪肉') {
             similarity += 5;
+            bonuses.push('T6_3(+5)');
         }
         
         if (hasSpecialAnswer_T6_6 && character.name === '熏猪肉') {
             similarity += 5;
+            bonuses.push('T6_6(+5)');
         }
         
         if (hasSpecialAnswer_T4_5 && character.name === '嫂子') {
-            similarity += 4;
+            similarity += 7;
+            bonuses.push('T4_5(+7)');
         }
+        
+        // 调试日志
+        console.log(`${character.name}: 基础相似度=${Math.round(calculateSimilarity(userScores, character.scores))}, 加成=[${bonuses.join(',')}], 最终相似度=${similarity}`);
         
         if (similarity > highestSimilarity) {
             highestSimilarity = similarity;
