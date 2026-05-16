@@ -376,7 +376,7 @@ const QUESTIONS = [
         options: [
             "表情包和骚话刷屏最多，日常围观石山搭建",
             "忘记布防被雪大人催",
-            "不时在群里赞叹一下雪大人的石山",
+            "不敢笑，我就是指挥搭建石山的",
             "默默听指挥打完走人"
         ],
         scores: [2, -2, 1, -1]
@@ -443,10 +443,10 @@ const QUESTIONS = [
         options: [
             "用爱发电，开发三保一阵容强行就业",
             "忍痛换下，把资源给强势名士",
-            "继续当看板娘/郎，但金戈不带了",
-            "等加强的那一天，等等党永不服输"
+            "给留一套装备，pve上场",
+            "等等党永不服输，我还会继续低强度练的"
         ],
-        scores: [2, -2, 1, -1]
+        scores: [2, -2, -1, 1]
     },
     {
         id: "T7_4",
@@ -562,7 +562,7 @@ const CHARACTERS = [
         name: '冰鲜',
         icon: '🧊',
         description: '你是XP党的代表，并且在金戈中总能保持平和心态。你会和冰鲜一样拥有一条狗吗？',
-        scores: { xp: 0, impart: -10, meme: 3, pvp: 0, whale: -10, clan: 7, loyalty: 10, phase: 1 }
+        scores: { xp: 0, impart: -5, meme: -3, pvp: 3, whale: 5, clan: 7, loyalty: 4, phase: 2 }
     },
     {
         name: '景区',
@@ -574,13 +574,13 @@ const CHARACTERS = [
         name: '糊纸',
         icon: '📄',
         description: '你是雅社中的P图大师，善于造梗爆梗，更是游戏氪金大人之一。代表26谢谢你~',
-        scores: { xp: -10, impart: 12, meme: 12, pvp: 5, whale: -12, clan: 12, loyalty: -7, phase: 12 }
+        scores: { xp: -3, impart: 11, meme: 11, pvp: 8, whale: -9, clan: 12, loyalty: 6, phase: 11 }
     },
     {
         name: '伤银心',
         icon: '💔',
         description: '你是雅社的活跃魔丸，P图的主力军。现在去雅社门口挂着！',
-        scores: { xp: 2, impart: 11, meme: 12, pvp: 0, whale: 10, clan: 12, loyalty: 7, phase: 12 }
+        scores: { xp: -3, impart: 7, meme: 6, pvp: 0, whale: 5, clan: 11, loyalty: -2, phase: 6 }
     },
     {
         name: '叔叔',
@@ -592,13 +592,13 @@ const CHARACTERS = [
         name: '走向成功',
         icon: '🏆',
         description: '虽然你不怎么做梗图，但是也不时出来活跃活跃，喜欢和大家一起耍。',
-        scores: { xp: 5, impart: -10, meme: -12, pvp: 9, whale: -12, clan: 8, loyalty: 5, phase: 0 }
+        scores: { xp: 3, impart: -2, meme: -2, pvp: 8, whale: -3, clan: 0, loyalty: 9, phase: -3 }
     },
     {
         name: '嫂子',
         icon: '👩',
         description: '你是雅社的核心成员，虽然定期刷新但是并不影响你关心每一位使君。蒸蚌！',
-        scores: { xp: -9, impart: 0, meme: 10, pvp: 8, whale: -10, clan: 10, loyalty: -7, phase: -10 }
+        scores: { xp: 6, impart: 4, meme: 8, pvp: 3, whale: 5, clan: 10, loyalty: -3, phase: -3 }
     },
     {
         name: '腊肉鬼',
@@ -611,6 +611,12 @@ const CHARACTERS = [
         icon: '🦜',
         description: '你是社群中的消息灵通人士，什么八卦都逃不过你的耳朵。你喜欢开impart，是雅社的impart担当。',
         scores: { xp: -7, impart: 12, meme: 2, pvp: 0, whale: 0, clan: 7, loyalty: 0, phase: 9 }
+    },
+    {
+        name: '旅游金箔厂',
+        icon: '🏭',
+        description: '你是神秘的金箔厂，虽然不经常出现，但是其实你为了自己的XP/强度很能氪金！',
+        scores: { xp: 2, impart: -8, meme: -3, pvp: -5, whale: 10, clan: -3, loyalty: 2, phase: -5 }
     }
 ];
 
@@ -722,16 +728,23 @@ function findBestMatch(userScores) {
     let highestSimilarity = 0;
     
     // 检查是否有特殊答案需要处理
-    const hasSpecialAnswer = userAnswers.some(
+    const hasSpecialAnswer_T3_4 = userAnswers.some(
         answer => answer.questionId === 'T3_4' && answer.optionIndex === 3
+    );
+    
+    const hasSpecialAnswer_T6_3 = userAnswers.some(
+        answer => answer.questionId === 'T6_3' && answer.optionIndex === 2
     );
     
     CHARACTERS.forEach(character => {
         let similarity = calculateSimilarity(userScores, character.scores);
         
-        // 如果用户选择了 T3_4 选项D，对"冰鲜"和"熏猪肉"额外+2
-        if (hasSpecialAnswer && (character.name === '冰鲜' || character.name === '熏猪肉')) {
+        if (hasSpecialAnswer_T3_4 && (character.name === '冰鲜' || character.name === '熏猪肉')) {
             similarity += 2;
+        }
+        
+        if (hasSpecialAnswer_T6_3 && character.name === '熏猪肉') {
+            similarity += 5;
         }
         
         if (similarity > highestSimilarity) {
