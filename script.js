@@ -556,7 +556,7 @@ const CHARACTERS = [
         name: '熏猪肉',
         icon: '🍖',
         description: '你是一个超级强度党，热爱游戏，伟大的主司大人！雅社感谢有你。',
-        scores: { xp: -12, impart: -11, meme: 7, pvp: 11, whale: -9, clan: 10, loyalty: -12, phase: -5 }
+        scores: { xp: 2, impart: -5, meme: -3, pvp: 0, whale: -5, clan: 7, loyalty: -3, phase: 4 }
     },
     {
         name: '冰鲜',
@@ -568,7 +568,7 @@ const CHARACTERS = [
         name: '景区',
         icon: '🏞️',
         description: '你热爱我们的雅社，是吵闹的雅社魔丸之一。请选择你的主人...',
-        scores: { xp: 12, impart: 10, meme: 5, pvp: -10, whale: 12, clan: 12, loyalty: 9, phase: 12 }
+        scores: { xp: 5, impart: 10, meme: 8, pvp: 3, whale: 7, clan: 11, loyalty: 9, phase: 12 }
     },
     {
         name: '糊纸',
@@ -598,7 +598,7 @@ const CHARACTERS = [
         name: '嫂子',
         icon: '👩',
         description: '你是雅社的核心成员，虽然定期刷新但是并不影响你关心每一位使君。蒸蚌！',
-        scores: { xp: 6, impart: 4, meme: 8, pvp: 3, whale: 5, clan: 10, loyalty: -3, phase: -3 }
+        scores: { xp: 0, impart: 0, meme: 8, pvp: 3, whale: 5, clan: 10, loyalty: -3, phase: -3 }
     },
     {
         name: '腊肉鬼',
@@ -740,6 +740,10 @@ function findBestMatch(userScores) {
         answer => answer.questionId === 'T6_6' && answer.optionIndex === 3
     );
     
+    const hasSpecialAnswer_T4_5 = userAnswers.some(
+        answer => answer.questionId === 'T4_5' && answer.optionIndex === 1
+    );
+    
     CHARACTERS.forEach(character => {
         let similarity = calculateSimilarity(userScores, character.scores);
         
@@ -753,6 +757,10 @@ function findBestMatch(userScores) {
         
         if (hasSpecialAnswer_T6_6 && character.name === '熏猪肉') {
             similarity += 5;
+        }
+        
+        if (hasSpecialAnswer_T4_5 && character.name === '嫂子') {
+            similarity += 4;
         }
         
         if (similarity > highestSimilarity) {
