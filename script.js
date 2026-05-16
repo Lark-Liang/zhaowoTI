@@ -810,7 +810,7 @@ function findBestMatch(userScores) {
         }
     });
     
-    return { character: bestCharacter, similarity: highestSimilarity, allSimilarities: allSimilarities };
+    return { character: bestCharacter, similarity: highestSimilarity };
 }
 
 // 获取所有角色的相似度（用于显示"你还像..."）
