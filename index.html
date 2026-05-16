@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>照我TI 测试 - 忘川风华录社群性格测试</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 开始页面 -->
+    <div id="start-page" class="page active">
+        <div class="card">
+            <!-- 顶部标题区 -->
+            <header class="header">
+                <h1 class="title">照我TI 测试</h1>
+                <p class="subtitle">测测你是忘川雅社的谁？</p>
+            </header>
+            
+            <!-- 中间内容区 -->
+            <main class="content">
+                <p class="description">
+                    通过48道题，探索你在忘川社群中的性格特质，找出与你最相似的角色
+                </p>
+                <div class="dimensions-preview">
+                    <h3>测试维度</h3>
+                    <div class="dimensions-grid">
+                        <div class="dimension-item">XP光谱</div>
+                        <div class="dimension-item">Impart参与度</div>
+                        <div class="dimension-item">梗图制造力</div>
+                        <div class="dimension-item">金戈血压指数</div>
+                        <div class="dimension-item">氪金理智值</div>
+                        <div class="dimension-item">雅社归属感表达</div>
+                        <div class="dimension-item">名士专情度</div>
+                        <div class="dimension-item">水群作息相位</div>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- 底部按钮区 -->
+            <footer class="footer">
+                <button id="start-btn" class="btn btn-primary">开始测试</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 测试页面 -->
+    <div id="test-page" class="page">
+        <div class="card">
+            <!-- 顶部标题区 -->
+            <header class="header">
+                <h1 class="title">照我TI 测试</h1>
+                <p class="subtitle">测测你是忘川雅社的谁？</p>
+            </header>
+            
+            <!-- 中间测试区 -->
+            <main class="content">
+                <!-- 维度标签 -->
+                <div class="dimension-badge" id="dimension-badge"></div>
+                
+                <!-- 题目内容 -->
+                <h2 class="question-text" id="question-text"></h2>
+                
+                <!-- 选项区域 -->
+                <div class="options-container">
+                    <button class="option-btn" id="opt-0" data-option-index="0">
+                        <span class="option-letter">A</span>
+                        <span class="option-text" id="opt-text-0"></span>
+                    </button>
+                    <button class="option-btn" id="opt-1" data-option-index="1">
+                        <span class="option-letter">B</span>
+                        <span class="option-text" id="opt-text-1"></span>
+                    </button>
+                    <button class="option-btn" id="opt-2" data-option-index="2">
+                        <span class="option-letter">C</span>
+                        <span class="option-text" id="opt-text-2"></span>
+                    </button>
+                    <button class="option-btn" id="opt-3" data-option-index="3">
+                        <span class="option-letter">D</span>
+                        <span class="option-text" id="opt-text-3"></span>
+                    </button>
+                </div>
+            </main>
+            
+            <!-- 底部进度条 -->
+            <footer class="footer">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="question-progress">第 1/48 题</span>
+                        <span class="progress-percent" id="progress-percent">0%</span>
+                    </div>
+                </div>
+                <!-- 导航按钮 -->
+                <div class="nav-buttons">
+                    <button id="prev-btn" class="btn btn-secondary" disabled>上一题</button>
+                    <button id="next-btn" class="btn btn-primary" disabled>下一题</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 结果页面 -->
+    <div id="result-page" class="page">
+        <div class="card">
+            <!-- 顶部标题区 -->
+            <header class="header">
+                <h1 class="title">照我TI 测试</h1>
+                <p class="subtitle">测测你是忘川雅社的谁？</p>
+            </header>
+            
+            <!-- 中间结果展示区 -->
+            <main class="content">
+                <div class="result-section">
+                    <h2 class="result-title">测试结果</h2>
+                    
+                    <!-- 角色匹配展示 -->
+                    <div class="character-match" id="character-match">
+                        <div class="character-icon" id="character-icon"></div>
+                        <h3 class="character-name" id="character-name"></h3>
+                        <p class="character-description" id="character-description"></p>
+                        <div class="similarity-score">
+                            <span>匹配度：</span>
+                            <span id="similarity-value"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- 各维度得分 -->
+                    <div class="dimensions-results">
+                        <h3>各维度得分</h3>
+                        <div class="dimensions-chart">
+                            <div class="dimension-bar" id="bar-xp">
+                                <span class="dimension-label">XP光谱</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-xp"></div>
+                                </div>
+                                <span class="bar-score" id="score-xp">0</span>
+                                <p class="dimension-eval" id="eval-xp"></p>
+                            </div>
+                            <div class="dimension-bar" id="bar-impart">
+                                <span class="dimension-label">Impart参与度</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-impart"></div>
+                                </div>
+                                <span class="bar-score" id="score-impart">0</span>
+                                <p class="dimension-eval" id="eval-impart"></p>
+                            </div>
+                            <div class="dimension-bar" id="bar-meme">
+                                <span class="dimension-label">梗图制造力</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-meme"></div>
+                                </div>
+                                <span class="bar-score" id="score-meme">0</span>
+                                <p class="dimension-eval" id="eval-meme"></p>
+                            </div>
+                            <div class="dimension-bar" id="bar-pvp">
+                                <span class="dimension-label">金戈血压指数</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-pvp"></div>
+                                </div>
+                                <span class="bar-score" id="score-pvp">0</span>
+                                <p class="dimension-eval" id="eval-pvp"></p>
+                            </div>
+                            <div class="dimension-bar" id="bar-whale">
+                                <span class="dimension-label">氪金理智值</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-whale"></div>
+                                </div>
+                                <span class="bar-score" id="score-whale">0</span>
+                                <p class="dimension-eval" id="eval-whale"></p>
+                            </div>
+                            <div class="dimension-bar" id="bar-clan">
+                                <span class="dimension-label">雅社归属感表达</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-clan"></div>
+                                </div>
+                                <span class="bar-score" id="score-clan">0</span>
+                                <p class="dimension-eval" id="eval-clan"></p>
+                            </div>
+                            <div class="dimension-bar" id="bar-loyalty">
+                                <span class="dimension-label">名士专情度</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-loyalty"></div>
+                                </div>
+                                <span class="bar-score" id="score-loyalty">0</span>
+                                <p class="dimension-eval" id="eval-loyalty"></p>
+                            </div>
+                            <div class="dimension-bar" id="bar-phase">
+                                <span class="dimension-label">水群作息相位</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" id="fill-phase"></div>
+                                </div>
+                                <span class="bar-score" id="score-phase">0</span>
+                                <p class="dimension-eval" id="eval-phase"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- 底部按钮区 -->
+            <footer class="footer">
+                <button id="restart-btn" class="btn btn-primary">重新测试</button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
