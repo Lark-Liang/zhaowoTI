@@ -948,7 +948,7 @@ function showResult() {
     const similarList = document.getElementById('similar-list');
     
     const similarCharacters = allSimilarities.filter(
-        item => item.name !== match.character.name && item.similarity >= 70
+        item => item.name !== match.character.name && item.similarity >= 80
     );
     
     if (similarCharacters.length > 0) {
