@@ -410,7 +410,7 @@ const QUESTIONS = [
             "雅社门口挂着的人选首选之一",
             "不出镜，早已被遗忘",
             "飞速出镜一下",
-            "错失出镜机会，因为没看群"
+            "不敢笑，我是挂人的"
         ],
         scores: [2, -2, 1, -1]
     },
@@ -736,6 +736,10 @@ function findBestMatch(userScores) {
         answer => answer.questionId === 'T6_3' && answer.optionIndex === 2
     );
     
+    const hasSpecialAnswer_T6_6 = userAnswers.some(
+        answer => answer.questionId === 'T6_6' && answer.optionIndex === 3
+    );
+    
     CHARACTERS.forEach(character => {
         let similarity = calculateSimilarity(userScores, character.scores);
         
@@ -744,6 +748,10 @@ function findBestMatch(userScores) {
         }
         
         if (hasSpecialAnswer_T6_3 && character.name === '熏猪肉') {
+            similarity += 5;
+        }
+        
+        if (hasSpecialAnswer_T6_6 && character.name === '熏猪肉') {
             similarity += 5;
         }
         
