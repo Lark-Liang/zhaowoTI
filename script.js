@@ -604,7 +604,7 @@ const CHARACTERS = [
         name: '腊肉鬼',
         icon: '👻',
         description: '你是竞技场上的强者，追求极致的强度和排名。你渴望切磋，为此不断努力。',
-        scores: { xp: -12, impart: -12, meme: -10, pvp: 12, whale: -12, clan: 0, loyalty: -12, phase: 10 }
+        scores: { xp: -4, impart: 3, meme: -3, pvp: 5, whale: 4, clan: 3, loyalty: 2, phase: 2 }
     },
     {
         name: '鹦鹉',
@@ -615,7 +615,7 @@ const CHARACTERS = [
     {
         name: '旅游金箔厂',
         icon: '🏭',
-        description: '你是神秘的金箔厂，虽然不经常出现，但是其实你为了自己的XP/强度很能氪金！',
+        description: '你是神秘的金箔厂，虽然不经常出现，更是一个保守屯抽党，你好屯屯鼠！',
         scores: { xp: 2, impart: -8, meme: -3, pvp: -5, whale: 10, clan: -3, loyalty: 2, phase: -5 }
     },
     {
@@ -655,6 +655,16 @@ const restartBtn = document.getElementById('restart-btn');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 
+// Fisher-Yates 洗牌算法
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
 // 初始化测试
 function initTest() {
     currentQuestion = 0;
@@ -669,6 +679,8 @@ function initTest() {
         phase: 0
     };
     userAnswers = [];
+    // 为每道题生成随机选项顺序
+    optionOrders = QUESTIONS.map(() => shuffleArray([0, 1, 2, 3]));
     showQuestion();
     updateNavButtons();
 }
@@ -699,12 +711,17 @@ function showQuestion() {
     // 更新题目内容
     document.getElementById('question-text').textContent = question.question;
 
-    // 更新选项并高亮已选选项
+    // 获取当前题目的选项随机顺序
+    const currentOptionOrder = optionOrders[currentQuestion];
+    
+    // 更新选项并高亮已选选项（按随机顺序显示）
     const currentAnswer = userAnswers[currentQuestion];
     for (let i = 0; i < 4; i++) {
-        document.getElementById(`opt-text-${i}`).textContent = question.options[i];
+        // 获取随机排序后的选项索引
+        const originalIndex = currentOptionOrder[i];
+        document.getElementById(`opt-text-${i}`).textContent = question.options[originalIndex];
         const optBtn = document.getElementById(`opt-${i}`);
-        optBtn.classList.toggle('selected', currentAnswer && currentAnswer.optionIndex === i);
+        optBtn.classList.toggle('selected', currentAnswer && currentAnswer.displayIndex === i);
     }
 
     // 更新导航按钮状态
@@ -986,9 +1003,14 @@ function getDimensionFromQuestionId(questionId) {
 }
 
 // 选择选项（仅记录答案，不跳转）
-function selectOption(optionIndex) {
+function selectOption(displayIndex) {
     const question = QUESTIONS[currentQuestion];
-    const score = question.scores[optionIndex];
+    // 获取当前题目的选项随机顺序
+    const currentOptionOrder = optionOrders[currentQuestion];
+    // 通过显示索引获取原始选项索引
+    const originalIndex = currentOptionOrder[displayIndex];
+    // 获取原始选项对应的分数
+    const score = question.scores[originalIndex];
     const dimension = getDimensionFromQuestionId(question.id);
 
     // 检查是否修改之前的答案，如果是则先减去旧分数
@@ -997,10 +1019,11 @@ function selectOption(optionIndex) {
         userScores[previousAnswer.dimension] -= previousAnswer.score;
     }
 
-    // 记录用户选择的答案
+    // 记录用户选择的答案（同时保存显示索引和原始索引）
     userAnswers[currentQuestion] = {
         questionId: question.id,
-        optionIndex: optionIndex,
+        displayIndex: displayIndex,      // 用于高亮显示
+        optionIndex: originalIndex,      // 用于特殊规则检测和计分
         score: score,
         dimension: dimension
     };
@@ -1011,9 +1034,9 @@ function selectOption(optionIndex) {
     // 确保分数在 -12 到 +12 之间
     userScores[dimension] = Math.max(-12, Math.min(12, userScores[dimension]));
 
-    // 高亮选中选项
+    // 高亮选中选项（使用显示索引）
     for (let i = 0; i < 4; i++) {
-        document.getElementById(`opt-${i}`).classList.toggle('selected', i === optionIndex);
+        document.getElementById(`opt-${i}`).classList.toggle('selected', i === displayIndex);
     }
 
     // 更新导航按钮状态
