@@ -586,7 +586,7 @@ const CHARACTERS = [
         name: '叔叔',
         icon: '👨',
         description: '你是社群中的长者，经验丰富。大家都喜欢和你玩，你也乐于参与强度讨论。',
-        scores: { xp: -11, impart: -12, meme: -11, pvp: 10, whale: -8, clan: 5, loyalty: -10, phase: 3 }
+        scores: { xp: -6, impart: -9, meme: -6, pvp: 1, whale: 9, clan: 1, loyalty: -1, phase: 2 }
     },
     {
         name: '走向成功',
@@ -609,8 +609,8 @@ const CHARACTERS = [
     {
         name: '鹦鹉',
         icon: '🦜',
-        description: '你是社群中的消息灵通人士，什么八卦都逃不过你的耳朵。你喜欢开impart，是雅社的impart担当。',
-        scores: { xp: -7, impart: 12, meme: 2, pvp: 0, whale: 0, clan: 7, loyalty: 0, phase: 9 }
+        description: '你是社群中的消息灵通人士，什么话都逃不过你的学舌。你喜欢开impart，是雅社的impart担当。',
+        scores: { xp: -2, impart: 7, meme: 0, pvp: 0, whale: -2, clan: 2, loyalty: 3, phase: 2 }
     },
     {
         name: '旅游金箔厂',
@@ -629,6 +629,12 @@ const CHARACTERS = [
         icon: '🚬',
         description: '你是雅社的重要成员，更是个100%的强度党！我的天呐下次逐鹿继续上吧！',
         scores: { xp: -12, impart: 4, meme: -1, pvp: -2, whale: 4, clan: 9, loyalty: -9, phase: 6 }
+    },
+    {
+        name: '无熊的丈夫',
+        icon: '👨',
+        description: '一点都不无能，参拜鲶鱼大王，至尊鲶滚滚！',
+        scores: { xp: 7, impart: -2, meme: -2, pvp: 1, whale: 5, clan: 5, loyalty: 0, phase: -8 }
     }
 ];
 
